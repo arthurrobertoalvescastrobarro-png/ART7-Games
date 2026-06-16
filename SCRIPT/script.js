@@ -1,122 +1,218 @@
 // =========================
-// BANCO DE JOGOS
+// DADOS INICIAIS
 // =========================
 
-const jogos = [
-
-{
-    titulo: "Minecraft",
-    imagem: "https://upload.wikimedia.org/wikipedia/en/5/51/Minecraft_cover.png",
-    descricao: "Explore, construa e sobreviva em um mundo infinito.",
-    categoria: "Sobrevivência",
-    nota: 4.9
-},
-
-{
-    titulo: "GTA V",
-    imagem: "https://upload.wikimedia.org/wikipedia/en/a/a5/Grand_Theft_Auto_V.png",
-    descricao: "Mundo aberto cheio de ação.",
-    categoria: "Mundo Aberto",
-    nota: 4.8
-},
-
-{
-    titulo: "The Witcher 3",
-    imagem: "https://upload.wikimedia.org/wikipedia/en/0/0c/Witcher_3_cover_art.jpg",
-    descricao: "Um dos maiores RPGs já feitos.",
-    categoria: "RPG",
-    nota: 4.9
-},
-
-{
-    titulo: "Cyberpunk 2077",
-    imagem: "https://upload.wikimedia.org/wikipedia/en/9/9f/Cyberpunk_2077_box_art.jpg",
-    descricao: "RPG futurista em Night City.",
-    categoria: "RPG",
-    nota: 4.6
-},
-
-{
-    titulo: "Forza Horizon 5",
-    imagem: "https://upload.wikimedia.org/wikipedia/en/8/86/Forza_Horizon_5_cover_art.jpg",
-    descricao: "Corridas em mundo aberto.",
-    categoria: "Corrida",
-    nota: 4.8
-}
-
+let jogos = JSON.parse(localStorage.getItem("jogos")) || [
+    {
+        id: 1,
+        titulo: "Cyberpunk 2077",
+        imagem: "https://cdn.cloudflare.steamstatic.com/steam/apps/1091500/header.jpg",
+        descricao: "RPG de mundo aberto futurista.",
+        tipo: "Jogo",
+        categoria: "Ação"
+    },
+    {
+        id: 2,
+        titulo: "Stranger Things",
+        imagem: "https://media.themoviedb.org/t/p/w300_and_h450_face/twfKp60THrcOIep9sjHODOOfO8d.jpg",
+        descricao: "Série de suspense e ficção científica.",
+        tipo: "Série",
+        categoria: "Suspense"
+    }
 ];
 
+let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
+let usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado")) || null;
+
+let tipoSelecionado = "Todos";
+let categoriaSelecionada = "Todos";
+let buscaTexto = "";
+
 // =========================
-// LOCAL STORAGE
+// SALVAR DADOS
 // =========================
 
-let favoritos =
-JSON.parse(localStorage.getItem("favoritos")) || [];
+function salvar() {
+    localStorage.setItem("jogos", JSON.stringify(jogos));
+    localStorage.setItem("usuarios", JSON.stringify(usuarios));
+    localStorage.setItem("usuarioLogado", JSON.stringify(usuarioLogado));
+}
 
-let usuarios =
-JSON.parse(localStorage.getItem("usuarios")) || [];
+// =========================
+// RENDERIZAR JOGOS
+// =========================
 
-let usuarioLogado =
-JSON.parse(localStorage.getItem("usuarioLogado")) || null;
+function renderizarJogos() {
+    const container = document.getElementById("gamesContainer");
+    container.innerHTML = "";
+
+    let filtrados = jogos.filter(j => {
+        return (
+            (tipoSelecionado === "Todos" || j.tipo === tipoSelecionado) &&
+            (categoriaSelecionada === "Todos" || j.categoria === categoriaSelecionada) &&
+            (j.titulo.toLowerCase().includes(buscaTexto.toLowerCase()))
+        );
+    });
+
+    filtrados.forEach(jogo => {
+        const div = document.createElement("div");
+        div.classList.add("game-card");
+
+        div.innerHTML = `
+            <img src="${jogo.imagem}" onclick="abrirModal(${jogo.id})">
+            <div class="game-info">
+                <h3>${jogo.titulo}</h3>
+                <p>${jogo.descricao}</p>
+            </div>
+            <div class="favorite-btn" onclick="favoritar(${jogo.id})">⭐</div>
+        `;
+
+        container.appendChild(div);
+    });
+}
 
 // =========================
 // FILTROS
 // =========================
 
-let categoriaAtual = "Todos";
+function filtrarTipo(tipo) {
+    tipoSelecionado = tipo;
+    renderizarJogos();
+}
+
+function filtrarCategoria(cat) {
+    categoriaSelecionada = cat;
+    renderizarJogos();
+}
 
 // =========================
-// MOSTRAR JOGOS
+// BUSCA
 // =========================
 
-function mostrarJogos(lista = jogos){
+function buscar(valor) {
+    buscaTexto = valor;
+    renderizarJogos();
+}
 
-    const container =
-    document.getElementById("listaJogos");
+// =========================
+// FAVORITOS
+// =========================
 
-    container.innerHTML = "";
+function favoritar(id) {
+    if (!usuarioLogado) {
+        alert("Faça login para favoritar!");
+        return;
+    }
 
-    lista.forEach(jogo => {
+    let user = usuarios.find(u => u.email === usuarioLogado.email);
 
-        const favorito =
-        favoritos.includes(jogo.titulo);
+    if (!user.favoritos) user.favoritos = [];
 
-        container.innerHTML += `
+    if (user.favoritos.includes(id)) {
+        user.favoritos = user.favoritos.filter(f => f !== id);
+    } else {
+        user.favoritos.push(id);
+    }
 
-        <div class="card-jogo">
+    usuarioLogado = user;
 
-            <img
-            src="${jogo.imagem}"
-            alt="${jogo.titulo}">
+    salvar();
+    renderizarJogos();
+}
 
-            <div class="card-conteudo">
+// =========================
+// LOGIN
+// =========================
 
-                <h3>${jogo.titulo}</h3>
+function login(email, senha) {
+    let user = usuarios.find(u => u.email === email && u.senha === senha);
 
-                <p>${jogo.descricao}</p>
+    if (!user) {
+        alert("Usuário ou senha inválidos");
+        return;
+    }
 
-                <p>
-                    🎮 ${jogo.categoria}
-                </p>
+    usuarioLogado = user;
+    salvar();
+    alert("Login realizado!");
+}
 
-                <p>
-                    ⭐ ${jogo.nota}
-                </p>
+// =========================
+// CADASTRO
+// =========================
 
-                <button
-                class="btn-favorito"
-                onclick="favoritar('${jogo.titulo}')">
+function cadastrar(nome, email, senha) {
+    if (usuarios.find(u => u.email === email)) {
+        alert("Usuário já existe!");
+        return;
+    }
 
-                ${favorito ? "⭐ Favoritado" : "⭐ Favoritar"}
-
-                </button>
-
-            </div>
-
-        </div>
-
-        `;
+    usuarios.push({
+        nome,
+        email,
+        senha,
+        favoritos: []
     });
 
-    atualizarContador(lista.length);
+    salvar();
+    alert("Conta criada com sucesso!");
 }
+
+// =========================
+// LOGOUT
+// =========================
+
+function logout() {
+    usuarioLogado = null;
+    salvar();
+}
+
+// =========================
+// MODAL
+// =========================
+
+function abrirModal(id) {
+    let jogo = jogos.find(j => j.id === id);
+
+    const modal = document.getElementById("modal");
+    const content = document.getElementById("modalContent");
+
+    content.innerHTML = `
+        <h2>${jogo.titulo}</h2>
+        <img src="${jogo.imagem}" style="width:100%; border-radius:10px;">
+        <p style="margin-top:10px;">${jogo.descricao}</p>
+    `;
+
+    modal.style.display = "flex";
+}
+
+function fecharModal() {
+    document.getElementById("modal").style.display = "none";
+}
+
+// =========================
+// ADMIN - ADICIONAR JOGO
+// =========================
+
+function adicionarJogo(titulo, imagem, descricao, tipo, categoria) {
+    let novo = {
+        id: Date.now(),
+        titulo,
+        imagem,
+        descricao,
+        tipo,
+        categoria
+    };
+
+    jogos.push(novo);
+    salvar();
+    renderizarJogos();
+}
+
+// =========================
+// INICIALIZAÇÃO
+// =========================
+
+document.addEventListener("DOMContentLoaded", () => {
+    renderizarJogos();
+});
