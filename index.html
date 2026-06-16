@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>GAME7 - Catálogo de Jogos</title>
+
+<link rel="stylesheet" href="CSS/style.css">
+```
+
+</head>
+
+<body>
+
+```
+<!-- HEADER -->
+
+<header>
+
+    <div class="logo">
+        🎮 GAME7
+    </div>
+
+    <div class="header-direita">
+
+        <input
+            type="text"
+            id="campoBusca"
+            placeholder="Buscar jogo...">
+
+        <button onclick="alternarTema()">
+            🌙
+        </button>
+
+    </div>
+
+</header>
+
+<!-- LOGIN / CADASTRO -->
+
+<section class="auth-container">
+
+    <div class="auth-box">
+
+        <h2>Cadastro</h2>
+
+        <input
+            type="text"
+            id="cadUsuario"
+            placeholder="Usuário">
+
+        <input
+            type="password"
+            id="cadSenha"
+            placeholder="Senha">
+
+        <button onclick="cadastrar()">
+            Cadastrar
+        </button>
+
+    </div>
+
+    <div class="auth-box">
+
+        <h2>Login</h2>
+
+        <input
+            type="text"
+            id="loginUsuario"
+            placeholder="Usuário">
+
+        <input
+            type="password"
+            id="loginSenha"
+            placeholder="Senha">
+
+        <button onclick="login()">
+            Entrar
+        </button>
+
+    </div>
+
+</section>
+
+<!-- USUÁRIO LOGADO -->
+
+<section id="usuarioArea">
+
+    <span id="usuarioLogado">
+        Nenhum usuário logado
+    </span>
+
+    <button onclick="logout()">
+        Sair
+    </button>
+
+</section>
+
+<!-- BANNER -->
+
+<section id="banner">
+
+    <div class="banner-conteudo">
+
+        <h1>
+            Bem-vindo ao GAME7
+        </h1>
+
+        <p>
+            Descubra novos jogos, organize seus favoritos
+            e monte sua biblioteca gamer.
+        </p>
+
+    </div>
+
+</section>
+
+<!-- MENU -->
+
+<section class="menu">
+
+    <button onclick="mostrarTodos()">
+        Todos
+    </button>
+
+    <button onclick="mostrarFavoritos()">
+        ⭐ Favoritos
+    </button>
+
+</section>
+
+<!-- FILTROS -->
+
+<section class="filtros">
+
+    <h3>Categorias</h3>
+
+    <div class="categorias">
+
+        <button onclick="filtrarCategoria('Todos')">
+            Todos
+        </button>
+
+        <button onclick="filtrarCategoria('Ação')">
+            Ação
+        </button>
+
+        <button onclick="filtrarCategoria('Aventura')">
+            Aventura
+        </button>
+
+        <button onclick="filtrarCategoria('RPG')">
+            RPG
+        </button>
+
+        <button onclick="filtrarCategoria('FPS')">
+            FPS
+        </button>
+
+        <button onclick="filtrarCategoria('Corrida')">
+            Corrida
+        </button>
+
+        <button onclick="filtrarCategoria('Terror')">
+            Terror
+        </button>
+
+        <button onclick="filtrarCategoria('Esportes')">
+            Esportes
+        </button>
+
+        <button onclick="filtrarCategoria('Mundo Aberto')">
+            Mundo Aberto
+        </button>
+
+        <button onclick="filtrarCategoria('Sobrevivência')">
+            Sobrevivência
+        </button>
+
+    </div>
+
+</section>
+
+<!-- CONTADOR -->
+
+<section class="contador">
+
+    <span id="contadorResultados">
+        0 jogos encontrados
+    </span>
+
+</section>
+
+<!-- CATÁLOGO -->
+
+<main>
+
+    <div id="listaJogos" class="catalogo">
+
+    </div>
+
+</main>
+
+<!-- PAINEL ADMIN -->
+
+<section id="painelAdmin">
+
+    <h2>
+        Painel do Administrador
+    </h2>
+
+    <input
+        type="text"
+        id="novoTitulo"
+        placeholder="Título do jogo">
+
+    <input
+        type="text"
+        id="novaImagem"
+        placeholder="URL da imagem">
+
+    <input
+        type="text"
+        id="novaCategoria"
+        placeholder="Categoria">
+
+    <input
+        type="number"
+        id="novaNota"
+        placeholder="Nota">
+
+    <textarea
+        id="novaDescricao"
+        placeholder="Descrição"></textarea>
+
+    <button onclick="adicionarJogo()">
+        Adicionar Jogo
+    </button>
+
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+
+    <p>
+        © 2026 GAME7 - Todos os direitos reservados
+    </p>
+
+</footer>
+
+<script src="SCRIPT/script.js"></script>
+```
+
+</body>
+
+</html>
