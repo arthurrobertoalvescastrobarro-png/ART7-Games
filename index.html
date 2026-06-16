@@ -33,7 +33,7 @@
             placeholder="Buscar jogo...">
 
         <button onclick="alternarTema()">
-            🌙
+            Tema 🌙
         </button>
 
     </div>
@@ -255,6 +255,20 @@
 
 <script src="SCRIPT/script.js"></script>
 
+<div class="admin-panel">
+
+    <h2>Admin Dashboard</h2>
+
+    <input id="adminTitulo" placeholder="Título">
+    <input id="adminImagem" placeholder="Imagem URL">
+    <input id="adminTipo" placeholder="Tipo">
+    <input id="adminCategoria" placeholder="Categoria">
+    <textarea id="adminDescricao" placeholder="Descrição"></textarea>
+
+    <button onclick="salvarJogo()">Salvar Jogo</button>
+
+    <div id="adminList"></div>
+</div>
 
 </body>
 

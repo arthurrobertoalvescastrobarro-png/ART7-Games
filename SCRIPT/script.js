@@ -2,6 +2,9 @@
 // DADOS INICIAIS
 // =========================
 
+let tema = localStorage.getItem("tema") || "dark";
+let jogoEditandoId = null;
+
 let jogos = JSON.parse(localStorage.getItem("jogos")) || [
     {
         id: 1,
@@ -194,19 +197,37 @@ function fecharModal() {
 // ADMIN - ADICIONAR JOGO
 // =========================
 
-function adicionarJogo(titulo, imagem, descricao, tipo, categoria) {
-    let novo = {
-        id: Date.now(),
-        titulo,
-        imagem,
-        descricao,
-        tipo,
-        categoria
-    };
+function salvarJogo() {
+    const titulo = document.getElementById("adminTitulo").value;
+    const imagem = document.getElementById("adminImagem").value;
+    const descricao = document.getElementById("adminDescricao").value;
+    const tipo = document.getElementById("adminTipo").value;
+    const categoria = document.getElementById("adminCategoria").value;
 
-    jogos.push(novo);
+    if (jogoEditandoId) {
+        let jogo = jogos.find(j => j.id === jogoEditandoId);
+
+        jogo.titulo = titulo;
+        jogo.imagem = imagem;
+        jogo.descricao = descricao;
+        jogo.tipo = tipo;
+        jogo.categoria = categoria;
+
+        jogoEditandoId = null;
+    } else {
+        jogos.push({
+            id: Date.now(),
+            titulo,
+            imagem,
+            descricao,
+            tipo,
+            categoria
+        });
+    }
+
     salvar();
     renderizarJogos();
+    renderizarAdmin();
 }
 
 // =========================
@@ -215,4 +236,68 @@ function adicionarJogo(titulo, imagem, descricao, tipo, categoria) {
 
 document.addEventListener("DOMContentLoaded", () => {
     renderizarJogos();
+    renderizarAdmin();
+    aplicarTema();
 });
+
+function renderizarAdmin() {
+    const container = document.getElementById("adminList");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    jogos.forEach(jogo => {
+        const div = document.createElement("div");
+        div.classList.add("admin-item");
+
+        div.innerHTML = `
+            <strong>${jogo.titulo}</strong>
+            <p>${jogo.tipo} - ${jogo.categoria}</p>
+
+            <button onclick="editarJogo(${jogo.id})">Editar</button>
+            <button onclick="deletarJogo(${jogo.id})">Excluir</button>
+        `;
+
+        container.appendChild(div);
+    });
+}
+
+function editarJogo(id) {
+    const jogo = jogos.find(j => j.id === id);
+    if (!jogo) return;
+
+    document.getElementById("adminTitulo").value = jogo.titulo;
+    document.getElementById("adminImagem").value = jogo.imagem;
+    document.getElementById("adminDescricao").value = jogo.descricao;
+    document.getElementById("adminTipo").value = jogo.tipo;
+    document.getElementById("adminCategoria").value = jogo.categoria;
+
+    jogoEditandoId = id;
+}
+
+function deletarJogo(id) {
+    jogos = jogos.filter(j => j.id !== id);
+    salvar();
+    renderizarJogos();
+    renderizarAdmin();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    renderizarJogos();
+    renderizarAdmin();
+});
+
+function aplicarTema() {
+    if (tema === "light") {
+        document.body.classList.add("light");
+    } else {
+        document.body.classList.remove("light");
+    }
+
+    localStorage.setItem("tema", tema);
+}
+
+function alternarTema() {
+    tema = tema === "dark" ? "light" : "dark";
+    aplicarTema();
+}

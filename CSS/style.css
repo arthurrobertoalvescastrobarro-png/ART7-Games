@@ -728,3 +728,34 @@ header{
 
 
 }
+
+body.light {
+    background: #f2f2f2;
+    color: #111;
+}
+
+body.light header {
+    background: #ffffff;
+    border-bottom: 1px solid #ddd;
+}
+
+body.light .game-card {
+    background: #ffffff;
+    color: #111;
+}
+
+body.light .auth-container,
+body.light .admin-panel {
+    background: #ffffff;
+    color: #111;
+}
+
+body.light button {
+    background: #ddd;
+    color: #111;
+}
+
+body.light button:hover {
+    background: #66c0f4;
+    color: white;
+}
